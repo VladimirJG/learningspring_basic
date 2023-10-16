@@ -8,7 +8,7 @@
         <constructor-arg index="1" value="John Smith"/>
     </bean>
 
-    <bean id="eventLogger" class="com.yet.spring.beans.ConsoleEventLogger"/>
+    <bean id="eventLogger" class="com.yet.spring.loggers.ConsoleEventLogger"/>
 
     <bean id="app" class="com.yet.spring.App">
         <constructor-arg ref="client"/>
@@ -23,4 +23,15 @@
     </bean>
     <bean id="dateFormat" class="java.text.DateFormat"
           factory-method="getDateTimeInstance"/>
+
+    <bean id="fileEventLogger" class="com.yet.spring.loggers.FileEventLogger"
+          init-method="init">
+        <constructor-arg value="target/events_log.txt"/>
+    </bean>
+
+    <bean id="cacheFileEventLogger" class="com.yet.spring.loggers.CacheFileEventLogger"
+          destroy-method="destroy">
+        <constructor-arg value="target/events_log.txt"/>
+        <constructor-arg value="5"/>
+    </bean>
 </beans>

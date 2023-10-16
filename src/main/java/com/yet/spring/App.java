@@ -1,15 +1,14 @@
 package com.yet.spring;
 
 import com.yet.spring.beans.Client;
-import com.yet.spring.beans.ConsoleEventLogger;
 import com.yet.spring.beans.Event;
-import com.yet.spring.beans.EventLogger;
-import org.springframework.context.ApplicationContext;
+import com.yet.spring.loggers.EventLogger;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class App {
     public static void main(String[] args) {
-        ApplicationContext context = new ClassPathXmlApplicationContext("spring.xml");
+        ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("spring.xml");
 
         App app = (App) context.getBean("app");
 
