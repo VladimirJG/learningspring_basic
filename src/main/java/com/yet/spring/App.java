@@ -2,6 +2,8 @@ package com.yet.spring;
 
 import com.yet.spring.beans.Client;
 import com.yet.spring.beans.ConsoleEventLogger;
+import com.yet.spring.beans.Event;
+import com.yet.spring.beans.EventLogger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -11,20 +13,24 @@ public class App {
 
         App app = (App) context.getBean("app");
 
-        app.logEvent("Some event for user 1");
-        app.logEvent("Some event for user 2");
+        Event event = context.getBean(Event.class);
+        app.logEvent(event, "Some event for user 1");
+
+        event = context.getBean(Event.class);
+        app.logEvent(event, "Some event for user 2");
     }
 
     private Client client;
-    private ConsoleEventLogger eventLogger;
+    private EventLogger eventLogger;
 
-    public App(Client client, ConsoleEventLogger eventLogger) {
+    public App(Client client, EventLogger eventLogger) {
         this.client = client;
         this.eventLogger = eventLogger;
     }
 
-    private void logEvent(String msg) {
+    private void logEvent(Event event, String msg) {
         String message = msg.replaceAll(client.getId(), client.getName());
-        eventLogger.logEvent(message);
+        event.setMsg(message);
+        eventLogger.logEvent(event);
     }
 }
