@@ -5,15 +5,16 @@ import com.yet.spring.beans.Event;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CacheFileEventLogger extends FileEventLogger{
+public class CacheFileEventLogger extends FileEventLogger {
     private int cacheSize;
     private List<Event> cache;
 
     public CacheFileEventLogger(String fileName, int cacheSize) {
         super(fileName);
         this.cacheSize = cacheSize;
-        this.cache =new ArrayList<>(cacheSize);
+        this.cache = new ArrayList<>(cacheSize);
     }
+
     @Override
     public void logEvent(Event event) {
         cache.add(event);
@@ -25,7 +26,7 @@ public class CacheFileEventLogger extends FileEventLogger{
     }
 
     public void destroy() {
-        if ( ! cache.isEmpty()) {
+        if (!cache.isEmpty()) {
             writeEventsFromCache();
         }
     }
