@@ -3,6 +3,7 @@ package com.yet.spring.beans;
 public class Client {
     private String id;
     private String name;
+    private String greeting;
 
     public Client(String id, String name) {
         this.id = id;
@@ -23,5 +24,13 @@ public class Client {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getGreeting() {
+        return greeting;
+    }
+
+    public void setGreeting(String greeting) {
+        this.greeting = greeting;
     }
 }
