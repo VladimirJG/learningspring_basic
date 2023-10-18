@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="consoleEventLogger" class="com.yet.spring.loggers.ConsoleEventLogger"/>
 
@@ -11,9 +12,8 @@
     </bean>
 
     <bean id="cacheFileEventLogger" class="com.yet.spring.loggers.CacheFileEventLogger"
-          destroy-method="destroy">
-        <constructor-arg value="target/events_log.txt"/>
-        <constructor-arg value="5"/>
+          destroy-method="destroy" parent="fileEventLogger">
+        <constructor-arg index="1" value="5"/>
     </bean>
 
     <bean id="combinedEventLogger" class="com.yet.spring.loggers.CombinedEventLoggers">

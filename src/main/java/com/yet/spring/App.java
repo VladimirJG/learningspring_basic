@@ -12,12 +12,15 @@ import java.util.Map;
 public class App {
     private Client client;
     private EventLogger eventLogger;
-    Map<EventType, EventLogger> loggers;
+    private Map<EventType, EventLogger> loggers;
 
     public static void main(String[] args) {
         ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("spring.xml");
 
         App app = (App) context.getBean("app");
+
+        Client client = context.getBean(Client.class);
+        System.out.println("Client says: " + client.getGreeting());
 
         Event event = context.getBean(Event.class);
         app.logEvent(EventType.INFO, event, "Some event for user 1");

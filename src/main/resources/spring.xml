@@ -1,26 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/util
+       http://www.springframework.org/schema/util/spring-util.xsd">
 
     <import resource="loggers.xml"/>
 
-    <bean id="client" class="com.yet.spring.beans.Client">
-        <constructor-arg index="0" value="1"/>
-        <constructor-arg index="1" value="John Smith"/>
-        <property name="greeting" value="Hello there!"/>
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:client.properties</value>
+            </list>
+        </property>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
     </bean>
 
-    <bean id="app" class="com.yet.spring.App">
-        <constructor-arg ref="client"/>
-        <constructor-arg ref="cacheFileEventLogger"/>
-        <constructor-arg>
-            <map>
-                <entry key="INFO" value-ref="consoleEventLogger"/>
-                <entry key="ERRORS" value-ref="combinedEventLogger"/>
-            </map>
-        </constructor-arg>
+
+    <bean id="client" class="com.yet.spring.beans.Client"
+          p:greeting="${greeting}">
+        <constructor-arg index="0" value="${id}"/>
+        <constructor-arg value="${name}"/>
     </bean>
+
+    <util:map id="loggerMap">
+        <entry key="INFO" value-ref="consoleEventLogger"/>
+        <entry key="ERROR" value-ref="combinedEventLogger"/>
+    </util:map>
+
+
+
+    <bean id="app" class="com.yet.spring.App">
+        <constructor-arg ref="client" />
+        <constructor-arg ref="cacheFileEventLogger" />
+        <constructor-arg ref="loggerMap"/>
+    </bean>
+
 
     <bean id="event" class="com.yet.spring.beans.Event" scope="prototype">
         <constructor-arg>
@@ -29,8 +49,8 @@
         <constructor-arg ref="dateFormat"/>
     </bean>
 
-    <bean id="dateFormat" class="java.text.DateFormat"
-          factory-method="getDateTimeInstance"/>
-
+    <bean id="dateFormat" class="java.text.DateFormat" factory-method="getDateTimeInstance"/>
+    <bean id="monitor" class="com.yet.spring.util.Monitor"/>
+    <bean id="awared" class="com.yet.spring.util.AwareBean" init-method="init"/>
 
 </beans>
