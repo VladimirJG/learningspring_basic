@@ -11,44 +11,58 @@ import java.util.Map;
 
 public class App {
     private Client client;
-    private EventLogger eventLogger;
+
+    private EventLogger defaultLogger;
+
     private Map<EventType, EventLogger> loggers;
 
+    private String startupMessage;
+
     public static void main(String[] args) {
-        ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("spring.xml");
+        ConfigurableApplicationContext ctx = new ClassPathXmlApplicationContext("spring.xml");
+        App app = (App) ctx.getBean("app");
 
-        App app = (App) context.getBean("app");
+        System.out.println(app.startupMessage);
 
-        Client client = context.getBean(Client.class);
+        Client client = ctx.getBean(Client.class);
         System.out.println("Client says: " + client.getGreeting());
 
-        Event event = context.getBean(Event.class);
-        app.logEvent(EventType.INFO, event, "Some event for user 1");
-        System.out.println(app.client.getGreeting());
+        Event event = ctx.getBean(Event.class);
+        app.logEvent(EventType.INFO, event, "Some event for 1");
 
-        event = context.getBean(Event.class);
-        app.logEvent(EventType.ERRORS, event, "Some event for user 2");
+        event = ctx.getBean(Event.class);
+        app.logEvent(EventType.ERROR, event, "Some event for 2");
 
-        event = context.getBean(Event.class);
-        app.logEvent(null, event, "Some event for user 3");
+        event = ctx.getBean(Event.class);
+        app.logEvent(null, event, "Some event for 3");
 
-        context.close();
+        ctx.close();
     }
 
     public App(Client client, EventLogger eventLogger, Map<EventType, EventLogger> loggers) {
+        super();
         this.client = client;
-        this.eventLogger = eventLogger;
+        this.defaultLogger = eventLogger;
         this.loggers = loggers;
     }
 
     private void logEvent(EventType eventType, Event event, String msg) {
-        String message = msg.replaceAll(client.getId(), client.getName());
+        String message = msg.replaceAll(client.getId(), client.getFullName());
         event.setMsg(message);
 
         EventLogger logger = loggers.get(eventType);
         if (logger == null) {
-            logger = eventLogger;
+            logger = defaultLogger;
         }
+
         logger.logEvent(event);
+    }
+
+    public void setStartupMessage(String startupMessage) {
+        this.startupMessage = startupMessage;
+    }
+
+    public EventLogger getDefaultLogger() {
+        return defaultLogger;
     }
 }

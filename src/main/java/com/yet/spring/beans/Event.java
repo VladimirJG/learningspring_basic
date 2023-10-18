@@ -1,28 +1,34 @@
 package com.yet.spring.beans;
 
 import java.text.DateFormat;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Event {
     private static final AtomicInteger AUTO_ID = new AtomicInteger(0);
+
+    public Event(String s, String s2) {
+
+    }
+
+    public static boolean isDay(int start, int end) {
+        LocalTime time = LocalTime.now();
+        return time.getHour() > start && time.getHour() < end;
+    }
+
     private int id;
     private String msg;
     private Date date;
+
     private DateFormat dateFormat;
 
+    public Event(Date date, DateFormat df) {
+        this.id = AUTO_ID.getAndIncrement();
 
-    public Event(Date date, DateFormat dateFormat) {
-        this.id = AUTO_ID.incrementAndGet();
         this.date = date;
-        this.dateFormat = dateFormat;
+        this.dateFormat = df;
     }
-
-
-    public int getId() {
-        return id;
-    }
-
 
     public String getMsg() {
         return msg;
@@ -32,17 +38,16 @@ public class Event {
         this.msg = msg;
     }
 
+    public int getId() {
+        return id;
+    }
+
     public Date getDate() {
         return date;
     }
 
-
     @Override
     public String toString() {
-        return "Event{" +
-                "id=" + id +
-                ", msg='" + msg + '\'' +
-                ", date=" + dateFormat.format(date) +
-                '}';
+        return "Event [id=" + id + ", msg=" + msg + ", date=" + dateFormat.format(date) + "]";
     }
 }

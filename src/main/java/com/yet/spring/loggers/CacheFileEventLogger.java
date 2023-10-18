@@ -9,10 +9,16 @@ public class CacheFileEventLogger extends FileEventLogger {
     private int cacheSize;
     private List<Event> cache;
 
-    public CacheFileEventLogger(String fileName, int cacheSize) {
-        super(fileName);
+    public CacheFileEventLogger(String filename, int cacheSize) {
+        super(filename);
         this.cacheSize = cacheSize;
-        this.cache = new ArrayList<>(cacheSize);
+        this.cache = new ArrayList<Event>(cacheSize);
+    }
+
+    public void destroy() {
+        if ( ! cache.isEmpty()) {
+            writeEventsFromCache();
+        }
     }
 
     @Override
@@ -22,12 +28,6 @@ public class CacheFileEventLogger extends FileEventLogger {
         if (cache.size() == cacheSize) {
             writeEventsFromCache();
             cache.clear();
-        }
-    }
-
-    public void destroy() {
-        if (!cache.isEmpty()) {
-            writeEventsFromCache();
         }
     }
 
